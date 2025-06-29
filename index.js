@@ -20,23 +20,27 @@ const client = new Client({
 });
 
 client.once('ready', () => {
-  console.log(`Discord bot is online as ${client.user.tag}!`);
+  console.log(`Discord bot is online as ${client.user.tag}`);
 });
 
 client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
 
-  try {
-    if (N8N_WEBHOOK_URL) {
-      await axios.post(N8N_WEBHOOK_URL, {
-        content: message.content,
-        author: message.author.username,
-        channelId: message.channel.id,
-      });
-      console.log('Message sent to n8n webhook');
+  if (message.content === '!testn8n') {
+    try {
+      if (N8N_WEBHOOK_URL) {
+        await axios.post(N8N_WEBHOOK_URL, {
+          content: message.content,
+          author: message.author.username,
+          channelId: message.channel.id,
+        });
+        console.log('Message sent to n8n webhook');
+        await message.reply('Triggered n8n workflow.');
+      }
+    } catch (error) {
+      console.error('Failed to send message to n8n webhook:', error.message);
+      await message.reply('Failed to trigger n8n.');
     }
-  } catch (error) {
-    console.error('Failed to send message to n8n webhook:', error.message);
   }
 });
 
