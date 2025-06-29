@@ -1,10 +1,16 @@
 require('dotenv').config();
 
+const express = require('express');
 const { Client, GatewayIntentBits } = require('discord.js');
 const axios = require('axios');
 
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 const N8N_WEBHOOK_URL = process.env.N8N_WEBHOOK_URL;
+const PORT = process.env.PORT || 10000;
+
+const app = express();
+app.get('/', (_, res) => res.send('Bot is running!'));
+app.listen(PORT, () => console.log(`Web service alive on port ${PORT}`));
 
 if (!DISCORD_BOT_TOKEN) {
   console.error('ERROR: DISCORD_BOT_TOKEN is not set!');
